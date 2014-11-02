@@ -7,15 +7,17 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Timers;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace WoWthing_Sync
 {
     public partial class SyncForm : Form
     {
-        private const string DEFAULT_HOST = "https://www.wowthing.org";
+        private const string DEFAULT_HOST = "https://www.wowthing.org/";
 
         private INI ini;
-        private bool loaded = false;
+        private bool loaded = false, paused = true;
         private string host, changedFile;
 
         private List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
@@ -68,7 +70,14 @@ namespace WoWthing_Sync
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            this.Start();
+            if (this.paused)
+            {
+                this.Start();
+            }
+            else
+            {
+                this.Pause();
+            }
         }
 
         delegate void LogTextCallback(string text);
@@ -83,7 +92,7 @@ namespace WoWthing_Sync
             else
             {
                 string timestamp = DateTime.Now.ToString("HH:mm:ss");
-                textLog.Text = textLog.Text + "[" + timestamp + "] " + text + "\r\n";
+                textLog.AppendText("[" + timestamp + "] " + text + "\r\n");
             }
         }
 
@@ -107,6 +116,8 @@ namespace WoWthing_Sync
                 fsw.EnableRaisingEvents = false;
             }
             this.watchers = new List<FileSystemWatcher>();
+
+            this.paused = true;
         }
 
         private void Start()
@@ -139,6 +150,8 @@ namespace WoWthing_Sync
             // Update button
             this.textStatus.Text = "ACTIVE";
             this.btnStart.Text = "Pause";
+
+            this.paused = false;
         }
 
         private void FileChanged(object source, FileSystemEventArgs e)
@@ -153,6 +166,8 @@ namespace WoWthing_Sync
         {
             //LogText("TimerEvent: " + this.changedFile);
             this.timer.Stop();
+
+            this.Upload(this.changedFile);
         }
 
         private void LoadINI()
@@ -179,6 +194,55 @@ namespace WoWthing_Sync
                 this.ini.WriteValue("general", "folder", this.textFolder.Text);
                 this.ini.WriteValue("general", "host", this.host);
             }
+        }
+
+        private void Upload(string filePath)
+        {
+            byte[] fileData = File.ReadAllBytes(filePath);
+
+            HttpContent fileContent = new ByteArrayContent(fileData);
+            
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(this.host);
+            client.DefaultRequestHeaders.Add("User-Agent", "WoWthing Sync");
+            client.Timeout = new System.TimeSpan(0, 0, 10);
+
+            var formData = new MultipartFormDataContent();
+            formData.Add(new StringContent(this.textUsername.Text), "username");
+            formData.Add(new StringContent(this.textPassword.Text), "password");
+            formData.Add(fileContent, "lua_file", "WoWthing_Collector.lua");
+
+            LogText("Uploading " + this.changedFile);
+            client.PostAsync("api/upload/", formData).ContinueWith(
+                (postTask) =>
+                {
+                    try
+                    {
+                        var result = postTask.Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            LogText("Upload successful.");
+                        }
+                        else
+                        {
+                            LogText("Upload failed: " + result.ReasonPhrase);
+                        }
+
+                        //var stream = task.Result;
+                        //byte[] bytes = new byte[result.Content.];
+                        //ream.Read(bytes, 0, (int)bytes.Length);
+                        
+                        //LogText("Upload complete: " + bytes.ToString());
+                    }
+                    catch (AggregateException aex)
+                    {
+                        foreach (Exception ex in aex.InnerExceptions)
+                        {
+                            LogText("EXCEPTION: " + ex.Message);
+                        }
+                    }
+                }
+            );
         }
     }
 }
