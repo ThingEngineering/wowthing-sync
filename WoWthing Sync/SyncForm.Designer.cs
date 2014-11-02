@@ -36,7 +36,11 @@
             this.textPassword = new System.Windows.Forms.TextBox();
             this.textUsername = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.textStatus = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // textLog
@@ -45,18 +49,19 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textLog.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.textLog.Location = new System.Drawing.Point(12, 105);
+            this.textLog.Location = new System.Drawing.Point(12, 170);
             this.textLog.Multiline = true;
             this.textLog.Name = "textLog";
             this.textLog.ReadOnly = true;
             this.textLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textLog.Size = new System.Drawing.Size(460, 145);
+            this.textLog.Size = new System.Drawing.Size(460, 180);
             this.textLog.TabIndex = 4;
             this.textLog.TabStop = false;
             // 
             // textFolder
             // 
-            this.textFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textFolder.BackColor = System.Drawing.SystemColors.Control;
             this.textFolder.Location = new System.Drawing.Point(231, 22);
             this.textFolder.Name = "textFolder";
@@ -67,8 +72,9 @@
             // 
             // btnChooseFolder
             // 
-            this.btnChooseFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChooseFolder.Location = new System.Drawing.Point(231, 52);
+            this.btnChooseFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnChooseFolder.Location = new System.Drawing.Point(231, 50);
             this.btnChooseFolder.Name = "btnChooseFolder";
             this.btnChooseFolder.Size = new System.Drawing.Size(223, 23);
             this.btnChooseFolder.TabIndex = 3;
@@ -88,7 +94,7 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(460, 87);
+            this.groupBox2.Size = new System.Drawing.Size(460, 86);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
@@ -128,20 +134,61 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Username";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.btnStart);
+            this.groupBox1.Controls.Add(this.textStatus);
+            this.groupBox1.Location = new System.Drawing.Point(13, 105);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(459, 59);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Status";
+            // 
+            // btnStart
+            // 
+            this.btnStart.Enabled = false;
+            this.btnStart.Location = new System.Drawing.Point(220, 21);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(104, 30);
+            this.btnStart.TabIndex = 1;
+            this.btnStart.Text = "Start";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            // 
+            // textStatus
+            // 
+            this.textStatus.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textStatus.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textStatus.Location = new System.Drawing.Point(133, 24);
+            this.textStatus.Name = "textStatus";
+            this.textStatus.ReadOnly = true;
+            this.textStatus.Size = new System.Drawing.Size(81, 26);
+            this.textStatus.TabIndex = 0;
+            this.textStatus.Text = "PAUSED";
+            this.textStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // SyncForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 262);
+            this.ClientSize = new System.Drawing.Size(484, 362);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.textLog);
             this.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MinimumSize = new System.Drawing.Size(500, 300);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(500, 1000);
+            this.MinimumSize = new System.Drawing.Size(500, 400);
             this.Name = "SyncForm";
             this.Text = "WoWthing Sync";
             this.Load += new System.EventHandler(this.SyncForm_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -157,6 +204,9 @@
         private System.Windows.Forms.TextBox textPassword;
         private System.Windows.Forms.TextBox textUsername;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.TextBox textStatus;
     }
 }
 
