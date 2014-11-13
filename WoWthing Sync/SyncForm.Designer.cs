@@ -183,7 +183,7 @@
             this.MaximumSize = new System.Drawing.Size(500, 1000);
             this.MinimumSize = new System.Drawing.Size(500, 400);
             this.Name = "SyncForm";
-            this.Text = "WoWthing Sync";
+            this.Text = "WoWthing Sync 0.0.2";
             this.Load += new System.EventHandler(this.SyncForm_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

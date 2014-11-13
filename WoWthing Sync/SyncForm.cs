@@ -225,14 +225,9 @@ namespace WoWthing_Sync
                         }
                         else
                         {
-                            LogText("Upload failed: " + result.ReasonPhrase);
+                            var errorMessage = result.Content.ReadAsStringAsync().Result;
+                            LogText("Upload failed: " + errorMessage);
                         }
-
-                        //var stream = task.Result;
-                        //byte[] bytes = new byte[result.Content.];
-                        //ream.Read(bytes, 0, (int)bytes.Length);
-                        
-                        //LogText("Upload complete: " + bytes.ToString());
                     }
                     catch (AggregateException aex)
                     {
