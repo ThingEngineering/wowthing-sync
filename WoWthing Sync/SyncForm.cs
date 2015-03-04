@@ -43,6 +43,12 @@ namespace WoWthing_Sync
             this.ini = new INI(iniPath);
             this.LoadINI();
             this.Pause();
+
+            // Auto-start if the Start button is enabled
+            if (this.btnStart.Enabled == true)
+            {
+                this.btnStart.PerformClick();
+            }
         }
 
         private void textUsername_TextChanged(object sender, EventArgs e)
