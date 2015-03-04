@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SyncForm));
             this.textLog = new System.Windows.Forms.TextBox();
             this.textFolder = new System.Windows.Forms.TextBox();
             this.btnChooseFolder = new System.Windows.Forms.Button();
@@ -39,6 +41,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnStart = new System.Windows.Forms.Button();
             this.textStatus = new System.Windows.Forms.TextBox();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -170,6 +173,14 @@
             this.textStatus.Text = "PAUSED";
             this.textStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.BalloonTipText = "WoWthing Sync has minimised to the system tray";
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "WoWthing Sync";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
+            // 
             // SyncForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -179,12 +190,14 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.textLog);
             this.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(500, 1000);
             this.MinimumSize = new System.Drawing.Size(500, 400);
             this.Name = "SyncForm";
-            this.Text = "WoWthing Sync 0.0.2";
+            this.Text = "WoWthing Sync 0.1.0";
             this.Load += new System.EventHandler(this.SyncForm_Load);
+            this.Resize += new System.EventHandler(this.SyncForm_Resize);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -207,6 +220,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.TextBox textStatus;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 

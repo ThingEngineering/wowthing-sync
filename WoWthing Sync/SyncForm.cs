@@ -239,5 +239,27 @@ namespace WoWthing_Sync
                 }
             );
         }
+
+        private void SyncForm_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.notifyIcon.Visible = true;
+                this.notifyIcon.ShowBalloonTip(3000);
+                this.ShowInTaskbar = false;
+                this.Hide();
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                this.ShowInTaskbar = true;
+                this.notifyIcon.Visible = false;
+            }
+        }
+
+        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
     }
 }
