@@ -42,11 +42,6 @@ namespace WoWthing_Sync
         private void SyncForm_Load(object sender, EventArgs e)
         {
             Log("WoWthing Sync started");
-            
-            // Timer setup
-            this._timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
-            this._timer.SynchronizingObject = this;
-            this._timer.Enabled = true;
 
             this.LoadSettings();
             this.Pause();
@@ -56,6 +51,11 @@ namespace WoWthing_Sync
             {
                 this.btnStart.PerformClick();
             }
+
+            // Timer setup
+            this._timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
+            this._timer.SynchronizingObject = this;
+            this._timer.Enabled = true;
         }
 
         delegate void LogCallback(string text, string[] args);
@@ -142,6 +142,14 @@ namespace WoWthing_Sync
 
         private void LoadSettings()
         {
+            // Check if an upgrade is required
+            if (Properties.Settings.Default.UpgradeRequired)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradeRequired = false;
+                Properties.Settings.Default.Save();
+            }
+
             // Restore window size and position
             if (Properties.Settings.Default.WindowH > 0)
             {
