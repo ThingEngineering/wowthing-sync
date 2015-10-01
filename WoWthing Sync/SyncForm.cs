@@ -85,16 +85,7 @@ namespace WoWthing_Sync
         private void Pause()
         {
             this.btnStart.Text = "Start";
-            if (this.textUsername.Text != "" &&
-                this.textPassword.Text != "" &&
-                this.textFolder.Text != "")
-            {
-                this.btnStart.Enabled = true;
-            }
-            else
-            {
-                this.btnStart.Enabled = false;
-            }
+            this.btnStart.Enabled = (this.textUsername.Text != "" && this.textPassword.Text != "" && this.textFolder.Text != "");
 
             // Disable the watchers
             foreach (FileSystemWatcher fsw in this.watchers)
@@ -255,16 +246,16 @@ namespace WoWthing_Sync
 
         private void textUsername_TextChanged(object sender, EventArgs e)
         {
-            Pause();
             Properties.Settings.Default.Username = textUsername.Text;
             Properties.Settings.Default.Save();
+            Pause();
         }
 
         private void textPassword_TextChanged(object sender, EventArgs e)
         {
-            Pause();
             Properties.Settings.Default.Password = textPassword.Text;
             Properties.Settings.Default.Save();
+            Pause();
         }
 
         private void btnChooseFolder_Click(object sender, EventArgs e)
@@ -272,10 +263,10 @@ namespace WoWthing_Sync
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             if (fbd.ShowDialog() == DialogResult.OK)
             {
-                Pause();
                 textFolder.Text = fbd.SelectedPath;
                 Properties.Settings.Default.WatchFolder = textFolder.Text;
                 Properties.Settings.Default.Save();
+                Pause();
             }
         }
 
