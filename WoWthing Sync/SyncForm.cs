@@ -22,10 +22,12 @@ namespace WoWthing_Sync
         private bool isPaused = true;
         private bool isUploading = false;
 
+        private List<string> watchedPaths = new List<string>();
+        private Dictionary<string, DateTime> lastUpdated = new Dictionary<string, DateTime>();
         private Dictionary<string, DateTime> changedFiles = new Dictionary<string, DateTime>();
-        private List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
         private System.Timers.Timer _timer = new System.Timers.Timer(500);
-        private readonly TimeSpan waitInterval = TimeSpan.FromMilliseconds(2500);
+        private readonly TimeSpan waitInterval = TimeSpan.FromMilliseconds(2000);
+        private int counter = 0;
 
         public SyncForm()
         {
@@ -83,39 +85,30 @@ namespace WoWthing_Sync
             this.btnStart.Text = "Start";
             this.btnStart.Enabled = (this.textUsername.Text != "" && this.textPassword.Text != "" && this.textFolder.Text != "");
 
-            // Disable the watchers
-            foreach (FileSystemWatcher fsw in this.watchers)
-            {
-                fsw.EnableRaisingEvents = false;
-            }
-            this.watchers = new List<FileSystemWatcher>();
-
             this.isPaused = true;
         }
 
         private void Start()
         {
+            watchedPaths = new List<string>();
+
             // Get a list of account directories
             string wtfPath = Path.Combine(this.textFolder.Text, @"WTF\Account");
             string[] dirs = Directory.GetDirectories(wtfPath);
-            
+
             for (int i = 0; i < dirs.Length; i++)
             {
                 // Check to see if our Lua file exists
                 string svPath = Path.Combine(dirs[i], "SavedVariables");
-                string luaPath = Path.Combine(svPath, "WoWthing_Collector.lua");
-                if (File.Exists(luaPath))
+                if (Directory.Exists(svPath))
                 {
-                    FileSystemWatcher fsw = new FileSystemWatcher(svPath);
-                    fsw.Filter = "WoWthing_Collector.lua";
-                    // Watch for changes in LastWrite times
-                    fsw.NotifyFilter = NotifyFilters.LastWrite;
-                    // Add event handler
-                    fsw.Changed += new FileSystemEventHandler(this.Watcher_FileChanged);
-                    // Begin watching
-                    fsw.EnableRaisingEvents = true;
+                    string luaPath = Path.Combine(svPath, "WoWthing_Collector.lua");
+                    if (File.Exists(luaPath))
+                    {
+                        lastUpdated[luaPath] = File.GetLastWriteTimeUtc(luaPath);
+                    }
 
-                    this.watchers.Add(fsw);
+                    watchedPaths.Add(luaPath);
                     Log("Watching {0}", dirs[i]);
                 }
             }
@@ -188,7 +181,7 @@ namespace WoWthing_Sync
             }
 
             HttpContent fileContent = new ByteArrayContent(fileData);
-            
+
             var client = new HttpClient();
             client.BaseAddress = new Uri(UPLOAD_HOST);
             client.DefaultRequestHeaders.Add("User-Agent", "WoWthing Sync");
@@ -300,21 +293,32 @@ namespace WoWthing_Sync
             this.WindowState = FormWindowState.Normal;
         }
 
-        private void Watcher_FileChanged(object source, FileSystemEventArgs e)
-        {
-            lock (changedFiles)
-            {
-                LogDebug("File changed: {0}", e.FullPath);
-                changedFiles[e.FullPath] = DateTime.Now;
-            }
-        }
-
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (!isUploading)
             {
                 lock (changedFiles)
                 {
+                    counter = (counter + 1) % 4;
+                    if (counter == 0)
+                    {
+                        foreach (string luaPath in watchedPaths)
+                        {
+                            if (File.Exists(luaPath))
+                            {
+                                DateTime oldMtime;
+                                DateTime newMtime = File.GetLastWriteTimeUtc(luaPath);
+                                lastUpdated.TryGetValue(luaPath, out oldMtime);
+
+                                if (newMtime > oldMtime)
+                                {
+                                    changedFiles[luaPath] = DateTime.Now;
+                                    lastUpdated[luaPath] = newMtime;
+                                }
+                            }
+                        }
+                    }
+
                     foreach (var kvp in changedFiles.Where(x => DateTime.Now - x.Value > waitInterval))
                     {
                         changedFiles.Remove(kvp.Key);
