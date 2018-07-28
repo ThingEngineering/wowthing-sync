@@ -280,10 +280,11 @@ namespace WoWthing_Sync
                 this.ShowInTaskbar = false;
                 this.Hide();
             }
-            else if (FormWindowState.Normal == this.WindowState)
+            else if (this.WindowState == FormWindowState.Normal)
             {
-                this.ShowInTaskbar = true;
                 this.notifyIcon.Visible = false;
+                this.ShowInTaskbar = true;
+                this.Show();
             }
         }
 
