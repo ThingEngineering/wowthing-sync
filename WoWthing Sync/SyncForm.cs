@@ -16,7 +16,7 @@ namespace WoWthing_Sync
 #if DEBUG
         private const string UPLOAD_HOST = "http://192.168.25.10:8002/";
 #else
-        private const string UPLOAD_HOST = "https://www.wowthing.org/";
+        private const string UPLOAD_HOST = "https://wowthing.org/";
 #endif
 
         private bool isPaused = true;
