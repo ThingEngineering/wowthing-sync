@@ -34,14 +34,13 @@
             this.textFolder = new System.Windows.Forms.TextBox();
             this.btnChooseFolder = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textPassword = new System.Windows.Forms.TextBox();
-            this.textUsername = new System.Windows.Forms.TextBox();
+            this.textApiKey = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnStart = new System.Windows.Forms.Button();
             this.textStatus = new System.Windows.Forms.TextBox();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.btnManualUpload = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -57,7 +56,7 @@
             this.textLog.Name = "textLog";
             this.textLog.ReadOnly = true;
             this.textLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textLog.Size = new System.Drawing.Size(460, 180);
+            this.textLog.Size = new System.Drawing.Size(460, 179);
             this.textLog.TabIndex = 4;
             this.textLog.TabStop = false;
             // 
@@ -66,10 +65,10 @@
             this.textFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textFolder.BackColor = System.Drawing.SystemColors.Control;
-            this.textFolder.Location = new System.Drawing.Point(231, 22);
+            this.textFolder.Location = new System.Drawing.Point(178, 51);
             this.textFolder.Name = "textFolder";
             this.textFolder.ReadOnly = true;
-            this.textFolder.Size = new System.Drawing.Size(223, 23);
+            this.textFolder.Size = new System.Drawing.Size(276, 23);
             this.textFolder.TabIndex = 1;
             this.textFolder.TabStop = false;
             // 
@@ -77,9 +76,9 @@
             // 
             this.btnChooseFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChooseFolder.Location = new System.Drawing.Point(231, 50);
+            this.btnChooseFolder.Location = new System.Drawing.Point(18, 51);
             this.btnChooseFolder.Name = "btnChooseFolder";
-            this.btnChooseFolder.Size = new System.Drawing.Size(223, 23);
+            this.btnChooseFolder.Size = new System.Drawing.Size(154, 23);
             this.btnChooseFolder.TabIndex = 3;
             this.btnChooseFolder.Text = "Select Folder...";
             this.btnChooseFolder.UseVisualStyleBackColor = true;
@@ -91,9 +90,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.btnChooseFolder);
             this.groupBox2.Controls.Add(this.textFolder);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.textPassword);
-            this.groupBox2.Controls.Add(this.textUsername);
+            this.groupBox2.Controls.Add(this.textApiKey);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
@@ -102,45 +99,29 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
             // 
-            // label2
+            // textApiKey
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 56);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 15);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Password";
-            // 
-            // textPassword
-            // 
-            this.textPassword.Location = new System.Drawing.Point(84, 51);
-            this.textPassword.Name = "textPassword";
-            this.textPassword.Size = new System.Drawing.Size(116, 23);
-            this.textPassword.TabIndex = 2;
-            this.textPassword.UseSystemPasswordChar = true;
-            this.textPassword.TextChanged += new System.EventHandler(this.textPassword_TextChanged);
-            // 
-            // textUsername
-            // 
-            this.textUsername.Location = new System.Drawing.Point(84, 22);
-            this.textUsername.Name = "textUsername";
-            this.textUsername.Size = new System.Drawing.Size(116, 23);
-            this.textUsername.TabIndex = 1;
-            this.textUsername.TextChanged += new System.EventHandler(this.textUsername_TextChanged);
+            this.textApiKey.Location = new System.Drawing.Point(84, 22);
+            this.textApiKey.Name = "textApiKey";
+            this.textApiKey.PasswordChar = '*';
+            this.textApiKey.Size = new System.Drawing.Size(370, 23);
+            this.textApiKey.TabIndex = 1;
+            this.textApiKey.TextChanged += new System.EventHandler(this.textApiKey_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(15, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 15);
+            this.label1.Size = new System.Drawing.Size(56, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Username";
+            this.label1.Text = "API Key";
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.btnManualUpload);
             this.groupBox1.Controls.Add(this.btnStart);
             this.groupBox1.Controls.Add(this.textStatus);
             this.groupBox1.Location = new System.Drawing.Point(13, 105);
@@ -153,7 +134,7 @@
             // btnStart
             // 
             this.btnStart.Enabled = false;
-            this.btnStart.Location = new System.Drawing.Point(220, 21);
+            this.btnStart.Location = new System.Drawing.Point(93, 19);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(104, 30);
             this.btnStart.TabIndex = 1;
@@ -165,7 +146,7 @@
             // 
             this.textStatus.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textStatus.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textStatus.Location = new System.Drawing.Point(133, 24);
+            this.textStatus.Location = new System.Drawing.Point(6, 22);
             this.textStatus.Name = "textStatus";
             this.textStatus.ReadOnly = true;
             this.textStatus.Size = new System.Drawing.Size(81, 26);
@@ -181,11 +162,21 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
             // 
+            // btnManualUpload
+            // 
+            this.btnManualUpload.Location = new System.Drawing.Point(305, 19);
+            this.btnManualUpload.Name = "btnManualUpload";
+            this.btnManualUpload.Size = new System.Drawing.Size(148, 30);
+            this.btnManualUpload.TabIndex = 1;
+            this.btnManualUpload.Text = "Manual Upload";
+            this.btnManualUpload.UseVisualStyleBackColor = true;
+            this.btnManualUpload.Click += new System.EventHandler(this.btnManualUpload_Click);
+            // 
             // SyncForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 362);
+            this.ClientSize = new System.Drawing.Size(484, 361);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.textLog);
@@ -214,14 +205,13 @@
         private System.Windows.Forms.TextBox textFolder;
         private System.Windows.Forms.Button btnChooseFolder;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textPassword;
-        private System.Windows.Forms.TextBox textUsername;
+        private System.Windows.Forms.TextBox textApiKey;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.TextBox textStatus;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.Button btnManualUpload;
     }
 }
 

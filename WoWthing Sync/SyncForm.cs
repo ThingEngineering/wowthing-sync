@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Windows.Forms;
 using System.IO;
-using System.Timers;
-using System.Net.Http;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace WoWthing_Sync
 {
     public partial class SyncForm : Form
     {
 #if DEBUG
-        private const string UPLOAD_HOST = "http://192.168.25.10:8002/";
+        private const string UPLOAD_HOST = "http://192.168.0.202:8000/";
 #else
         private const string UPLOAD_HOST = "https://wowthing.org/";
 #endif
@@ -23,9 +22,10 @@ namespace WoWthing_Sync
         private bool isUploading = false;
 
         private List<string> watchedPaths = new List<string>();
-        private Dictionary<string, DateTime> lastUpdated = new Dictionary<string, DateTime>();
-        private Dictionary<string, DateTime> changedFiles = new Dictionary<string, DateTime>();
-        private System.Timers.Timer _timer = new System.Timers.Timer(500);
+        private readonly Dictionary<string, DateTime> lastUpdated = new Dictionary<string, DateTime>();
+        private readonly Dictionary<string, DateTime> changedFiles = new Dictionary<string, DateTime>();
+        private readonly HttpClient client = new HttpClient();
+        private readonly System.Timers.Timer _timer = new System.Timers.Timer(500);
         private readonly TimeSpan waitInterval = TimeSpan.FromMilliseconds(2000);
         private int counter = 0;
 
@@ -34,41 +34,49 @@ namespace WoWthing_Sync
             InitializeComponent();
 
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text = String.Format("WoWthing Sync {0}.{1}.{2}", version.Major, version.Minor, version.Build);
+            Text = string.Format("WoWthing Sync {0}.{1}.{2}", version.Major, version.Minor, version.Build);
         }
 
         private void SyncForm_Load(object sender, EventArgs e)
         {
             Log("WoWthing Sync started");
 
-            this.LoadSettings();
-            this.Pause();
+            LoadSettings();
+            Pause();
 
             // Auto-start if the Start button is enabled
-            if (this.btnStart.Enabled == true)
+            if (btnStart.Enabled)
             {
-                this.btnStart.PerformClick();
+                btnStart.PerformClick();
             }
 
+            // HttpClient setup
+            client.BaseAddress = new Uri(UPLOAD_HOST);
+            client.DefaultRequestHeaders.Add("User-Agent", "WoWthing Sync");
+            client.Timeout = new System.TimeSpan(0, 0, 20);
+
             // Timer setup
-            this._timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
-            this._timer.SynchronizingObject = this;
-            this._timer.Enabled = true;
+            _timer.Elapsed += _timer_Elapsed;
+            _timer.SynchronizingObject = this;
+            _timer.Enabled = true;
         }
 
-        delegate void LogCallback(string text, string[] args);
+        private delegate void LogCallback(string text, string[] args);
+
         private void Log(string text, params string[] args)
         {
             // Invoke magic if accessing from another thread
-            if (this.textLog.InvokeRequired)
+            if (textLog.InvokeRequired)
             {
                 LogCallback ltc = new LogCallback(Log);
-                this.Invoke(ltc, new object[] { text, args });
+                Invoke(ltc, new object[] { text, args });
             }
             else
             {
                 if (args.Length > 0)
+                {
                     text = String.Format(text, args);
+                }
                 textLog.AppendText(String.Format("[{0}] {1}\r\n", DateTime.Now.ToString("HH:mm:ss"), text));
             }
         }
@@ -82,10 +90,10 @@ namespace WoWthing_Sync
 
         private void Pause()
         {
-            this.btnStart.Text = "Start";
-            this.btnStart.Enabled = (this.textUsername.Text != "" && this.textPassword.Text != "" && this.textFolder.Text != "");
+            btnStart.Text = "Start";
+            btnStart.Enabled = (textApiKey.Text != "" && textFolder.Text != "");
 
-            this.isPaused = true;
+            isPaused = true;
         }
 
         private void Start()
@@ -93,7 +101,7 @@ namespace WoWthing_Sync
             watchedPaths = new List<string>();
 
             // Get a list of account directories
-            string wtfPath = Path.Combine(this.textFolder.Text, @"WTF\Account");
+            string wtfPath = Path.Combine(textFolder.Text, @"WTF\Account");
             string[] dirs = Directory.GetDirectories(wtfPath);
 
             for (int i = 0; i < dirs.Length; i++)
@@ -114,10 +122,10 @@ namespace WoWthing_Sync
             }
 
             // Update button
-            this.textStatus.Text = "ACTIVE";
-            this.btnStart.Text = "Pause";
+            textStatus.Text = "ACTIVE";
+            btnStart.Text = "Pause";
 
-            this.isPaused = false;
+            isPaused = false;
         }
 
         private void LoadSettings()
@@ -133,15 +141,14 @@ namespace WoWthing_Sync
             // Restore window size and position
             if (Properties.Settings.Default.WindowH > 0)
             {
-                this.Height = (int)Properties.Settings.Default.WindowH;
+                Height = (int)Properties.Settings.Default.WindowH;
             }
-            this.Left = (int)Properties.Settings.Default.WindowX;
-            this.Top = (int)Properties.Settings.Default.WindowY;
+            Left = (int)Properties.Settings.Default.WindowX;
+            Top = (int)Properties.Settings.Default.WindowY;
 
             // Restore our settings
-            this.textUsername.Text = Properties.Settings.Default.Username;
-            this.textPassword.Text = Properties.Settings.Default.Password;
-            this.textFolder.Text = Properties.Settings.Default.WatchFolder;
+            textApiKey.Text = Properties.Settings.Default.ApiKey;
+            textFolder.Text = Properties.Settings.Default.WatchFolder;
         }
 
         private byte[] ReadAllGZip(string filePath)
@@ -182,14 +189,8 @@ namespace WoWthing_Sync
 
             HttpContent fileContent = new ByteArrayContent(fileData);
 
-            var client = new HttpClient();
-            client.BaseAddress = new Uri(UPLOAD_HOST);
-            client.DefaultRequestHeaders.Add("User-Agent", "WoWthing Sync");
-            client.Timeout = new System.TimeSpan(0, 0, 20);
-
             var formData = new MultipartFormDataContent();
-            formData.Add(new StringContent(this.textUsername.Text), "username");
-            formData.Add(new StringContent(this.textPassword.Text), "password");
+            formData.Add(new StringContent(textApiKey.Text), "api_key");
             formData.Add(new StringContent("yup"), "compressed");
             formData.Add(fileContent, "lua_file", "WoWthing_Collector.lua");
 
@@ -227,22 +228,15 @@ namespace WoWthing_Sync
         // Save our settings when the window closes
         private void SyncForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Properties.Settings.Default.WindowX = this.Left;
-            Properties.Settings.Default.WindowY = this.Top;
-            Properties.Settings.Default.WindowH = this.Height;
+            Properties.Settings.Default.WindowX = Left;
+            Properties.Settings.Default.WindowY = Top;
+            Properties.Settings.Default.WindowH = Height;
             Properties.Settings.Default.Save();
         }
 
-        private void textUsername_TextChanged(object sender, EventArgs e)
+        private void textApiKey_TextChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Username = textUsername.Text;
-            Properties.Settings.Default.Save();
-            Pause();
-        }
-
-        private void textPassword_TextChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.Password = textPassword.Text;
+            Properties.Settings.Default.ApiKey = textApiKey.Text;
             Properties.Settings.Default.Save();
             Pause();
         }
@@ -259,39 +253,53 @@ namespace WoWthing_Sync
             }
         }
 
+        private void btnManualUpload_Click(object sender, EventArgs e)
+        {
+            if (!isUploading)
+            {
+                foreach (string luaPath in watchedPaths)
+                {
+                    if (File.Exists(luaPath))
+                    {
+                        Upload(luaPath);
+                    }
+                }
+            }
+        }
+
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (this.isPaused)
+            if (isPaused)
             {
-                this.Start();
+                Start();
             }
             else
             {
-                this.Pause();
+                Pause();
             }
         }
 
         private void SyncForm_Resize(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized)
             {
-                this.notifyIcon.Visible = true;
-                this.notifyIcon.ShowBalloonTip(3000);
-                this.ShowInTaskbar = false;
-                this.Hide();
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(3000);
+                ShowInTaskbar = false;
+                Hide();
             }
-            else if (this.WindowState == FormWindowState.Normal)
+            else if (WindowState == FormWindowState.Normal)
             {
-                this.notifyIcon.Visible = false;
-                this.ShowInTaskbar = true;
-                this.Show();
+                notifyIcon.Visible = false;
+                ShowInTaskbar = true;
+                Show();
             }
         }
 
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
         {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
+            Show();
+            WindowState = FormWindowState.Normal;
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -307,9 +315,8 @@ namespace WoWthing_Sync
                         {
                             if (File.Exists(luaPath))
                             {
-                                DateTime oldMtime;
                                 DateTime newMtime = File.GetLastWriteTimeUtc(luaPath);
-                                lastUpdated.TryGetValue(luaPath, out oldMtime);
+                                lastUpdated.TryGetValue(luaPath, out DateTime oldMtime);
 
                                 if (newMtime > oldMtime)
                                 {
