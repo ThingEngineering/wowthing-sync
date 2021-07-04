@@ -6,14 +6,17 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace WoWthing_Sync
 {
     public partial class SyncForm : Form
     {
 #if DEBUG
-        private const string UPLOAD_HOST = "http://192.168.0.202:8000/";
+        private const string UPLOAD_HOST = "https://localhost:55501/";
 #else
         private const string UPLOAD_HOST = "https://wowthing.org/";
 #endif
@@ -170,32 +173,24 @@ namespace WoWthing_Sync
         {
             isUploading = true;
 
-            //byte[] fileData = File.ReadAllBytes(filePath);
-            byte[] fileData;
-            try
+            var upload = new ApiUpload
             {
-                fileData = ReadAllGZip(filePath);
-            }
-            catch (Exception ex)
+                ApiKey = textApiKey.Text,
+                LuaFile = File.ReadAllText(filePath, Encoding.UTF8),
+            };
+            var json = JsonConvert.SerializeObject(upload, new JsonSerializerSettings
             {
-                Log("EXCEPTION: {0}", ex.Message);
-
-                lock (changedFiles)
+                ContractResolver = new DefaultContractResolver
                 {
-                    changedFiles[filePath] = DateTime.Now;
-                }
-                return;
-            }
+                    NamingStrategy = new CamelCaseNamingStrategy(),
+                },
+            });
 
-            HttpContent fileContent = new ByteArrayContent(fileData);
-
-            var formData = new MultipartFormDataContent();
-            formData.Add(new StringContent(textApiKey.Text), "api_key");
-            formData.Add(new StringContent("yup"), "compressed");
-            formData.Add(fileContent, "lua_file", "WoWthing_Collector.lua");
+            //var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var content = new CompressedContent(new StringContent(json, Encoding.UTF8, "application/json"));
 
             Log("Uploading {0}...", filePath);
-            client.PostAsync("/api/upload/", formData).ContinueWith(
+            client.PostAsync("/api/upload/", content).ContinueWith(
                 (postTask) =>
                 {
                     try
@@ -216,6 +211,10 @@ namespace WoWthing_Sync
                         foreach (Exception ex in aex.InnerExceptions)
                         {
                             Log("EXCEPTION: {0}", ex.Message);
+                            if (ex.InnerException != null)
+                            {
+                                Log("  - {0}", ex.InnerException.Message);
+                            }
                         }
                     }
 
@@ -337,5 +336,11 @@ namespace WoWthing_Sync
             }
         }
         #endregion
+    }
+
+    public class ApiUpload
+    {
+        public string ApiKey { get; set; }
+        public string LuaFile { get; set; }
     }
 }
