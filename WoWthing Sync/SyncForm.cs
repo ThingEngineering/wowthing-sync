@@ -142,10 +142,27 @@ namespace WoWthing_Sync
             }
 
             // Restore window size and position
-            if (Properties.Settings.Default.WindowH > 0)
+            if (Properties.Settings.Default.WindowH < 100 || Properties.Settings.Default.WindowX < 0 || Properties.Settings.Default.WindowY < 0)
             {
-                Height = (int)Properties.Settings.Default.WindowH;
+                if (Properties.Settings.Default.WindowH < 100)
+                {
+                    Properties.Settings.Default.WindowH = 400;
+                }
+
+                if (Properties.Settings.Default.WindowX < 0)
+                {
+                    Properties.Settings.Default.WindowX = 0;
+                }
+
+                if (Properties.Settings.Default.WindowY < 0)
+                {
+                    Properties.Settings.Default.WindowY = 0;
+                }
+
+                Properties.Settings.Default.Save();
             }
+
+            Height = (int)Properties.Settings.Default.WindowH;
             Left = (int)Properties.Settings.Default.WindowX;
             Top = (int)Properties.Settings.Default.WindowY;
 
