@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -15,9 +16,13 @@ namespace WoWthing_Sync
 {
     public partial class SyncForm : Form
     {
+        private const string STARTUP_KEY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+
 #if DEBUG
+        private const string STARTUP_NAME = "WoWthingDebug";
         private const string UPLOAD_HOST = "https://localhost:55501/";
 #else
+        private const string STARTUP_NAME = "WoWthingRelease";
         private const string UPLOAD_HOST = "https://wowthing.org/";
 #endif
 
@@ -93,8 +98,13 @@ namespace WoWthing_Sync
 
         private void Pause()
         {
+            Log("Paused");
+
             btnStart.Text = "Start";
             btnStart.Enabled = (textApiKey.Text != "" && textFolder.Text != "");
+            textStatus.Text = "PAUSED";
+
+            Icon = notifyIcon.Icon = Properties.Resources.PausedIcon;
 
             isPaused = true;
         }
@@ -129,6 +139,14 @@ namespace WoWthing_Sync
             btnStart.Text = "Pause";
 
             isPaused = false;
+
+            Icon = notifyIcon.Icon = Properties.Resources.ActiveIcon;
+
+            // Minimize on startup
+            if (checkStartMinimized.Checked)
+            {
+                this.WindowState = FormWindowState.Minimized;
+            }
         }
 
         private void LoadSettings()
@@ -142,7 +160,9 @@ namespace WoWthing_Sync
             }
 
             // Restore window size and position
-            if (Properties.Settings.Default.WindowH < 100 || Properties.Settings.Default.WindowX < 0 || Properties.Settings.Default.WindowY < 0)
+            if (Properties.Settings.Default.WindowH < 100 ||
+                Properties.Settings.Default.WindowX < 0 ||
+                Properties.Settings.Default.WindowY < 0)
             {
                 if (Properties.Settings.Default.WindowH < 100)
                 {
@@ -169,6 +189,8 @@ namespace WoWthing_Sync
             // Restore our settings
             textApiKey.Text = Properties.Settings.Default.ApiKey;
             textFolder.Text = Properties.Settings.Default.WatchFolder;
+            checkStartMinimized.Checked = Properties.Settings.Default.StartMinimized;
+            checkStartOnStartup.Checked = Properties.Settings.Default.StartOnStartup;
         }
 
         private byte[] ReadAllGZip(string filePath)
@@ -255,6 +277,32 @@ namespace WoWthing_Sync
             Properties.Settings.Default.ApiKey = textApiKey.Text;
             Properties.Settings.Default.Save();
             Pause();
+        }
+
+        private void checkStartMinimized_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.StartMinimized = checkStartMinimized.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void checkStartOnStartup_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.StartOnStartup = checkStartOnStartup.Checked;
+            Properties.Settings.Default.Save();
+
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(STARTUP_KEY, true);
+            if (checkStartOnStartup.Checked)
+            {
+                key.SetValue(STARTUP_NAME, Application.ExecutablePath.ToString());
+            }
+            else
+            {
+                var existing = key.GetValue(STARTUP_NAME);
+                if (existing != null)
+                {
+                    key.DeleteValue(STARTUP_NAME);
+                }
+            } 
         }
 
         private void btnChooseFolder_Click(object sender, EventArgs e)
