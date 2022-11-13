@@ -26,7 +26,7 @@ namespace WoWthing_Sync
         private const string UPLOAD_HOST = "https://wowthing.org/";
 #endif
 
-        private bool isPaused = true;
+        private bool isPaused = false;
         private bool isUploading = false;
 
         private List<string> watchedPaths = new List<string>();
@@ -98,10 +98,13 @@ namespace WoWthing_Sync
 
         private void Pause()
         {
-            Log("Paused");
+            if (!isPaused)
+            {
+                Log("Paused");
+            }
 
             btnStart.Text = "Start";
-            btnStart.Enabled = (textApiKey.Text != "" && textFolder.Text != "");
+            btnStart.Enabled = textApiKey.Text != "" && textFolder.Text != "";
             textStatus.Text = "PAUSED";
 
             Icon = notifyIcon.Icon = Properties.Resources.PausedIcon;
@@ -115,6 +118,12 @@ namespace WoWthing_Sync
 
             // Get a list of account directories
             string wtfPath = Path.Combine(textFolder.Text, @"WTF\Account");
+            if (!Directory.Exists(wtfPath))
+            {
+                Log("ERROR! Path does not exist: {0}", wtfPath);
+                return;
+            }
+
             string[] dirs = Directory.GetDirectories(wtfPath);
 
             for (int i = 0; i < dirs.Length; i++)
