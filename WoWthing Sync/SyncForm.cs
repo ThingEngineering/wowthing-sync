@@ -308,6 +308,12 @@ namespace WoWthing_Sync
         private void btnChooseFolder_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            if (!string.IsNullOrWhiteSpace(textFolder.Text) && Directory.Exists(textFolder.Text))
+            {
+                fbd.SelectedPath = textFolder.Text;
+            }
+
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 string retailFolder = Path.Combine(fbd.SelectedPath, "_retail_");
