@@ -310,7 +310,8 @@ namespace WoWthing_Sync
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             if (fbd.ShowDialog() == DialogResult.OK)
             {
-                textFolder.Text = fbd.SelectedPath;
+                string retailFolder = Path.Combine(fbd.SelectedPath, "_retail_");
+                textFolder.Text = Directory.Exists(retailFolder) ? retailFolder : fbd.SelectedPath;
                 Properties.Settings.Default.WatchFolder = textFolder.Text;
                 Properties.Settings.Default.Save();
                 Pause();
