@@ -118,5 +118,17 @@ namespace WoWthing_Sync.Properties {
                 this["StartOnStartup"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CloseMinimizes {
+            get {
+                return ((bool)(this["CloseMinimizes"]));
+            }
+            set {
+                this["CloseMinimizes"] = value;
+            }
+        }
     }
 }

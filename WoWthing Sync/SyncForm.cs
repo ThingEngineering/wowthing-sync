@@ -279,6 +279,12 @@ namespace WoWthing_Sync
             Properties.Settings.Default.WindowY = Top;
             Properties.Settings.Default.WindowH = Height;
             Properties.Settings.Default.Save();
+
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                MinimizeWindow();
+                e.Cancel = true;
+            }
         }
 
         private void textApiKey_TextChanged(object sender, EventArgs e)
@@ -291,6 +297,12 @@ namespace WoWthing_Sync
         private void checkStartMinimized_CheckedChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.StartMinimized = checkStartMinimized.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void checkExitMinimizes_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.CloseMinimizes = checkExitMinimizes.Checked;
             Properties.Settings.Default.Save();
         }
 
@@ -360,26 +372,36 @@ namespace WoWthing_Sync
             }
         }
 
+        private void MinimizeWindow()
+        {
+            notifyIcon.Visible = true;
+            notifyIcon.ShowBalloonTip(3000);
+            ShowInTaskbar = false;
+            Hide();
+        }
+        
+        private void RestoreWindow()
+        {
+            notifyIcon.Visible = false;
+            ShowInTaskbar = true;
+            Show();
+        }
+
         private void SyncForm_Resize(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized)
             {
-                notifyIcon.Visible = true;
-                notifyIcon.ShowBalloonTip(3000);
-                ShowInTaskbar = false;
-                Hide();
+                MinimizeWindow();
             }
             else if (WindowState == FormWindowState.Normal)
             {
-                notifyIcon.Visible = false;
-                ShowInTaskbar = true;
-                Show();
+                RestoreWindow();
             }
         }
 
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
         {
-            Show();
+            RestoreWindow();
             WindowState = FormWindowState.Normal;
         }
 
