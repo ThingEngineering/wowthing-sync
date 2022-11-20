@@ -281,7 +281,7 @@ namespace WoWthing_Sync
             Properties.Settings.Default.WindowH = Height;
             Properties.Settings.Default.Save();
 
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (Properties.Settings.Default.CloseMinimizes && e.CloseReason == CloseReason.UserClosing)
             {
                 MinimizeWindow();
                 e.Cancel = true;
