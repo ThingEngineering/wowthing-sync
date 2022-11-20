@@ -198,6 +198,7 @@ namespace WoWthing_Sync
             // Restore our settings
             textApiKey.Text = Properties.Settings.Default.ApiKey;
             textFolder.Text = Properties.Settings.Default.WatchFolder;
+            checkCloseMinimizes.Checked = Properties.Settings.Default.CloseMinimizes;
             checkStartMinimized.Checked = Properties.Settings.Default.StartMinimized;
             checkStartOnStartup.Checked = Properties.Settings.Default.StartOnStartup;
         }
