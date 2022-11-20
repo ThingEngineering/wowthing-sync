@@ -317,6 +317,7 @@ namespace WoWthing_Sync
         private void btnChooseFolder_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.RootFolder = Environment.SpecialFolder.MyComputer;
 
             if (!string.IsNullOrWhiteSpace(textFolder.Text) && Directory.Exists(textFolder.Text))
             {
