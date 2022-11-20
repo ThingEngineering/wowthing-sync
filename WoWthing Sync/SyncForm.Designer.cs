@@ -33,6 +33,7 @@
             this.textFolder = new System.Windows.Forms.TextBox();
             this.btnChooseFolder = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkCloseMinimizes = new System.Windows.Forms.CheckBox();
             this.checkStartOnStartup = new System.Windows.Forms.CheckBox();
             this.checkStartMinimized = new System.Windows.Forms.CheckBox();
             this.textApiKey = new System.Windows.Forms.TextBox();
@@ -42,7 +43,6 @@
             this.textStatus = new System.Windows.Forms.TextBox();
             this.btnStart = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.checkExitMinimizes = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -54,13 +54,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textLog.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.textLog.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textLog.Location = new System.Drawing.Point(13, 244);
-            this.textLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textLog.Location = new System.Drawing.Point(10, 198);
             this.textLog.Multiline = true;
             this.textLog.Name = "textLog";
             this.textLog.ReadOnly = true;
             this.textLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textLog.Size = new System.Drawing.Size(523, 228);
+            this.textLog.Size = new System.Drawing.Size(393, 186);
             this.textLog.TabIndex = 4;
             this.textLog.TabStop = false;
             // 
@@ -70,11 +69,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textFolder.BackColor = System.Drawing.SystemColors.Control;
             this.textFolder.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textFolder.Location = new System.Drawing.Point(163, 25);
-            this.textFolder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textFolder.Location = new System.Drawing.Point(122, 20);
             this.textFolder.Name = "textFolder";
             this.textFolder.ReadOnly = true;
-            this.textFolder.Size = new System.Drawing.Size(349, 29);
+            this.textFolder.Size = new System.Drawing.Size(263, 25);
             this.textFolder.TabIndex = 1;
             this.textFolder.TabStop = false;
             // 
@@ -83,10 +81,9 @@
             this.btnChooseFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnChooseFolder.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChooseFolder.Location = new System.Drawing.Point(7, 23);
-            this.btnChooseFolder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnChooseFolder.Location = new System.Drawing.Point(5, 19);
             this.btnChooseFolder.Name = "btnChooseFolder";
-            this.btnChooseFolder.Size = new System.Drawing.Size(145, 32);
+            this.btnChooseFolder.Size = new System.Drawing.Size(109, 26);
             this.btnChooseFolder.TabIndex = 3;
             this.btnChooseFolder.Text = "Select Folder...";
             this.btnChooseFolder.UseVisualStyleBackColor = true;
@@ -96,30 +93,39 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.checkExitMinimizes);
+            this.groupBox2.Controls.Add(this.checkCloseMinimizes);
             this.groupBox2.Controls.Add(this.checkStartOnStartup);
             this.groupBox2.Controls.Add(this.checkStartMinimized);
             this.groupBox2.Controls.Add(this.btnChooseFolder);
             this.groupBox2.Controls.Add(this.textFolder);
             this.groupBox2.Controls.Add(this.textApiKey);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Location = new System.Drawing.Point(13, 12);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Location = new System.Drawing.Point(10, 10);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox2.Size = new System.Drawing.Size(525, 151);
+            this.groupBox2.Size = new System.Drawing.Size(394, 123);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
+            // 
+            // checkCloseMinimizes
+            // 
+            this.checkCloseMinimizes.AutoSize = true;
+            this.checkCloseMinimizes.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkCloseMinimizes.Location = new System.Drawing.Point(274, 91);
+            this.checkCloseMinimizes.Name = "checkCloseMinimizes";
+            this.checkCloseMinimizes.Size = new System.Drawing.Size(120, 21);
+            this.checkCloseMinimizes.TabIndex = 6;
+            this.checkCloseMinimizes.Text = "Close minimizes";
+            this.checkCloseMinimizes.UseVisualStyleBackColor = true;
+            this.checkCloseMinimizes.CheckedChanged += new System.EventHandler(this.checkCloseMinimizes_CheckedChanged);
             // 
             // checkStartOnStartup
             // 
             this.checkStartOnStartup.AutoSize = true;
             this.checkStartOnStartup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkStartOnStartup.Location = new System.Drawing.Point(166, 112);
-            this.checkStartOnStartup.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkStartOnStartup.Location = new System.Drawing.Point(130, 91);
             this.checkStartOnStartup.Name = "checkStartOnStartup";
-            this.checkStartOnStartup.Size = new System.Drawing.Size(178, 27);
+            this.checkStartOnStartup.Size = new System.Drawing.Size(138, 21);
             this.checkStartOnStartup.TabIndex = 5;
             this.checkStartOnStartup.Text = "Start with Windows";
             this.checkStartOnStartup.UseVisualStyleBackColor = true;
@@ -129,10 +135,9 @@
             // 
             this.checkStartMinimized.AutoSize = true;
             this.checkStartMinimized.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkStartMinimized.Location = new System.Drawing.Point(7, 112);
-            this.checkStartMinimized.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkStartMinimized.Location = new System.Drawing.Point(7, 91);
             this.checkStartMinimized.Name = "checkStartMinimized";
-            this.checkStartMinimized.Size = new System.Drawing.Size(151, 27);
+            this.checkStartMinimized.Size = new System.Drawing.Size(117, 21);
             this.checkStartMinimized.TabIndex = 4;
             this.checkStartMinimized.Text = "Start minimized";
             this.checkStartMinimized.UseVisualStyleBackColor = true;
@@ -141,11 +146,10 @@
             // textApiKey
             // 
             this.textApiKey.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textApiKey.Location = new System.Drawing.Point(163, 62);
-            this.textApiKey.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textApiKey.Location = new System.Drawing.Point(122, 50);
             this.textApiKey.Name = "textApiKey";
             this.textApiKey.PasswordChar = '*';
-            this.textApiKey.Size = new System.Drawing.Size(349, 29);
+            this.textApiKey.Size = new System.Drawing.Size(263, 25);
             this.textApiKey.TabIndex = 1;
             this.textApiKey.TextChanged += new System.EventHandler(this.textApiKey_TextChanged);
             // 
@@ -153,10 +157,9 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(84, 65);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(63, 53);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 23);
+            this.label1.Size = new System.Drawing.Size(51, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "API Key";
             // 
@@ -167,11 +170,9 @@
             this.groupBox1.Controls.Add(this.btnManualUpload);
             this.groupBox1.Controls.Add(this.textStatus);
             this.groupBox1.Controls.Add(this.btnStart);
-            this.groupBox1.Location = new System.Drawing.Point(13, 171);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Location = new System.Drawing.Point(10, 139);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox1.Size = new System.Drawing.Size(524, 65);
+            this.groupBox1.Size = new System.Drawing.Size(393, 53);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Status";
@@ -179,10 +180,9 @@
             // btnManualUpload
             // 
             this.btnManualUpload.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnManualUpload.Location = new System.Drawing.Point(347, 23);
-            this.btnManualUpload.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnManualUpload.Location = new System.Drawing.Point(260, 19);
             this.btnManualUpload.Name = "btnManualUpload";
-            this.btnManualUpload.Size = new System.Drawing.Size(169, 32);
+            this.btnManualUpload.Size = new System.Drawing.Size(127, 26);
             this.btnManualUpload.TabIndex = 1;
             this.btnManualUpload.Text = "Manual Upload";
             this.btnManualUpload.UseVisualStyleBackColor = true;
@@ -192,11 +192,10 @@
             // 
             this.textStatus.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textStatus.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textStatus.Location = new System.Drawing.Point(8, 23);
-            this.textStatus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textStatus.Location = new System.Drawing.Point(6, 19);
             this.textStatus.Name = "textStatus";
             this.textStatus.ReadOnly = true;
-            this.textStatus.Size = new System.Drawing.Size(93, 31);
+            this.textStatus.Size = new System.Drawing.Size(70, 26);
             this.textStatus.TabIndex = 0;
             this.textStatus.Text = "PAUSED";
             this.textStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -205,10 +204,9 @@
             // 
             this.btnStart.Enabled = false;
             this.btnStart.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStart.Location = new System.Drawing.Point(109, 23);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnStart.Location = new System.Drawing.Point(82, 19);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(119, 32);
+            this.btnStart.Size = new System.Drawing.Size(89, 26);
             this.btnStart.TabIndex = 1;
             this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -222,31 +220,18 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
             // 
-            // checkExitMinimizes
-            // 
-            this.checkExitMinimizes.AutoSize = true;
-            this.checkExitMinimizes.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkExitMinimizes.Location = new System.Drawing.Point(358, 112);
-            this.checkExitMinimizes.Name = "checkExitMinimizes";
-            this.checkExitMinimizes.Size = new System.Drawing.Size(154, 27);
-            this.checkExitMinimizes.TabIndex = 6;
-            this.checkExitMinimizes.Text = "Close minimizes";
-            this.checkExitMinimizes.UseVisualStyleBackColor = true;
-            this.checkExitMinimizes.CheckedChanged += new System.EventHandler(this.checkExitMinimizes_CheckedChanged);
-            // 
             // SyncForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(551, 485);
+            this.ClientSize = new System.Drawing.Size(415, 394);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.textLog);
             this.Icon = global::WoWthing_Sync.Properties.Resources.PausedIcon;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(569, 1062);
-            this.MinimumSize = new System.Drawing.Size(569, 422);
+            this.MaximumSize = new System.Drawing.Size(431, 872);
+            this.MinimumSize = new System.Drawing.Size(431, 352);
             this.Name = "SyncForm";
             this.Text = "WoWthing Sync";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SyncForm_FormClosing);
@@ -276,7 +261,7 @@
         private System.Windows.Forms.Button btnManualUpload;
         private System.Windows.Forms.CheckBox checkStartOnStartup;
         private System.Windows.Forms.CheckBox checkStartMinimized;
-        private System.Windows.Forms.CheckBox checkExitMinimizes;
+        private System.Windows.Forms.CheckBox checkCloseMinimizes;
     }
 }
 

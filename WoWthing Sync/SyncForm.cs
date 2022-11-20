@@ -300,9 +300,9 @@ namespace WoWthing_Sync
             Properties.Settings.Default.Save();
         }
 
-        private void checkExitMinimizes_CheckedChanged(object sender, EventArgs e)
+        private void checkCloseMinimizes_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.CloseMinimizes = checkExitMinimizes.Checked;
+            Properties.Settings.Default.CloseMinimizes = checkCloseMinimizes.Checked;
             Properties.Settings.Default.Save();
         }
 
